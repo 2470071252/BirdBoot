@@ -6,7 +6,17 @@ package com.webserver.core;
  * 并模拟SpringMVC的主要工作完成对业务的处理
  */
 public class BirdBootApplication {
-    public static void main(String[] args) {
+    public BirdBootApplication(){
 
     }
+
+    public void start(){
+
+    }
+
+    public static void main(String[] args) {
+        BirdBootApplication application = new BirdBootApplication();
+        application.start();
+    }
+
 }
