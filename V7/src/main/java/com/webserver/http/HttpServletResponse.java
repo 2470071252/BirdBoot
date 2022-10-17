@@ -51,7 +51,20 @@ public class HttpServletResponse {
         sendHeaders();
         // 3 发送响应内容
         sendContent();
-            /*
+
+    }
+
+    private void sendStatusLine() throws IOException{
+        println("HTTP/1.1"+" "+statusCode+" "+statusReason);
+    }
+
+    private  void sendHeaders() throws IOException{
+        println("Content-Type: text/html");
+        println("Content-Length: " + contentFile.length());
+    }
+
+    private void sendContent() throws IOException{
+             /*
             单独发送空行表示响应头结束
             相当于
             out.write(13);
@@ -66,18 +79,6 @@ public class HttpServletResponse {
         while ((len = fis.read(buf)) != -1) {
             out.write(buf, 0, len);
         }
-    }
-
-    private void sendStatusLine() throws IOException{
-        println("HTTP/1.1"+" "+statusCode+" "+statusReason);
-    }
-
-    private  void sendHeaders() throws IOException{
-        println("Content-Type: text/html");
-    }
-
-    private void sendContent() throws IOException{
-        println("Content-Length: " + contentFile.length());
     }
 
     private void println(String line) throws IOException {
