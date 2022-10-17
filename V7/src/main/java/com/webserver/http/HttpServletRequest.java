@@ -30,7 +30,7 @@ public class HttpServletRequest {
         // 2.处理请求
         parseHeaders();
         // 3.发送响应
-        parseConten();
+        parseContent();
         // HTTP协议要求交互完毕要断开连接
 //        socket.close();
 
@@ -57,7 +57,7 @@ public class HttpServletRequest {
 
     }
     // 解析消息正文
-    private void parseConten(){
+    private void parseContent(){
 
     }
 
