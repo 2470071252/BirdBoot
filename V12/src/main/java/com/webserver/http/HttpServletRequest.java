@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 请求对象
@@ -16,6 +17,11 @@ public class HttpServletRequest {
     private String method;  // 请求方式
     private String uri; // 抽象路径
     private String protocol;    // 协议版本
+
+    private String requestURI;  // uri中的请求部分，即："?"左侧内容
+    private String queryString; // uri中的参数部分，即："?"右侧内容
+    private Map<String,String> parameters = new HashMap<>();
+
     // 消息头的相关信息
     private Map<String,String> headers = new HashMap<>();
 
@@ -43,13 +49,41 @@ public class HttpServletRequest {
         if (line.isEmpty()) {  // 如果请求行为空字符串则本次为空请求
             throw new EmptyRequestException();
         }
-
+        System.out.println("请求行内容:"+line);
         // 将请求行内容按照空格拆分问三个部分，分别初始化三个变量
         String[] strings = line.split("\\s");
         method = strings[0];
         uri = strings[1];
+        parseURI(); // 进一步解析uri
         protocol = strings[2];
+        System.out.println("method:"+method);//method:GET
+        System.out.println("uri:"+uri);//uri:/index.html
+        System.out.println("protocol:"+protocol);//protocol:HTTP/1.1
     }
+    // 进一步解析uri
+    private void parseURI(){
+        String[] split = uri.split("\\?");
+        if (split.length==1) {
+            return;
+        }
+        requestURI = split[0];
+        queryString = split[1];
+        String[] split1 = queryString.split("\\&");
+        for ( String string : split1 ) {
+            String[] s = string.split("=");
+            parameters.put(s[0],s[1]);
+        }
+
+        System.out.println("requestURI"+requestURI);
+        System.out.println("queryString"+queryString);
+        System.out.println("parameters"+parameters);
+        System.out.println("-----------------");
+        parameters.forEach((k,v) -> System.out.println(k+":"+v));
+        System.out.println("-------------------");
+    }
+
+
+
     // 解析消息头
     private void parseHeaders() throws IOException{
         while (true){
@@ -57,10 +91,11 @@ public class HttpServletRequest {
             if (line.isEmpty()){
                 break;
             }
+            System.out.println("消息头:" + line);
             String[] data = line.split(":\\s");
             headers.put(data[0],data[1]);
         }
-
+        System.out.println("headers:"+headers);
     }
     // 解析消息正文
     private void parseContent(){
